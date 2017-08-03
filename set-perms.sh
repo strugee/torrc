@@ -1,4 +1,4 @@
 #!/bin/sh
 
-chmod 644 torrc
-chown root:wheel torrc
+chmod 644 usr/local/etc/torrc
+chown root:wheel usr/local/etc/torrc
