@@ -15,8 +15,7 @@
 ## Tor opens a SOCKS proxy on port 9050 by default -- even if you don't
 ## configure one below. Set "SOCKSPort 0" if you plan to run Tor only
 ## as a relay, and not make any local application connections yourself.
-#SOCKSPort 9050 # Default: Bind to localhost:9050 for local connections.
-#SOCKSPort 192.168.0.1:9100 # Bind to this address:port too.
+SOCKSPort 0
 
 ## Entry policies to allow/deny SOCKS requests based on IP address.
 ## First entry that matches wins. If no SOCKSPolicy is set, we accept
@@ -35,7 +34,7 @@
 ## may provide sensitive information to an attacker who obtains the logs.
 ##
 ## Send all messages of level 'notice' or higher to /var/log/tor/notices.log
-#Log notice file /var/log/tor/notices.log
+Log notice file /var/log/tor/notices.log
 ## Send every possible message to /var/log/tor/debug.log
 #Log debug file /var/log/tor/debug.log
 ## Use the system log instead of Tor's logfiles
@@ -46,11 +45,11 @@
 ## Uncomment this to start the process in the background... or use
 ## --runasdaemon 1 on the command line. This is ignored on Windows;
 ## see the FAQ entry if you want Tor to run as an NT service.
-#RunAsDaemon 1
+RunAsDaemon 1
 
 ## The directory for keeping all the keys/etc. By default, we store
 ## things in $HOME/.tor on Unix, and in Application Data\tor on Windows.
-#DataDirectory /var/db/tor
+DataDirectory /usr/local/var/lib/tor
 
 ## The port on which Tor will listen for local connections from Tor
 ## controller applications, as documented in control-spec.txt.
@@ -81,7 +80,8 @@
 ## See https://www.torproject.org/docs/tor-doc-relay for details.
 
 ## Required: what port to advertise for incoming Tor connections.
-#ORPort 9001
+ORPort 9001
+ORPort 443
 ## If you want to listen on a port other than the one advertised in
 ## ORPort (e.g. to advertise 443 but bind to 9090), you can do it as
 ## follows.  You'll need to do ipchains or other port forwarding
@@ -105,7 +105,7 @@
 ## A handle for your relay, so people don't have to refer to it by key.
 ## Nicknames must be between 1 and 19 characters inclusive, and must
 ## contain only the characters [a-zA-Z0-9].
-#Nickname ididnteditheconfig
+Nickname strugees
 
 ## Define these to limit how much relayed traffic you will allow. Your
 ## own traffic is still unthrottled. Note that RelayBandwidthRate must
@@ -121,13 +121,11 @@
 ## not to their sum: setting "40 GB" may allow up to 80 GB total before
 ## hibernating.
 ##
-## Set a maximum of 40 gigabytes each way per period.
-#AccountingMax 40 GBytes
-## Each period starts daily at midnight (AccountingMax is per day)
-#AccountingStart day 00:00
-## Each period starts on the 3rd of the month at 15:00 (AccountingMax
-## is per month)
-#AccountingStart month 3 15:00
+## Set a maximum of 10 gigabytes each way per period.
+##
+## TODO tune this; see https://www.torproject.org/docs/faq.html.en#LimitTotalBandwidth
+AccountingMax 10 GBytes
+AccountingStart month 15:00
 
 ## Administrative contact information for this relay or bridge. This line
 ## can be used to contact you if your relay or bridge is misconfigured or
@@ -135,10 +133,9 @@
 ## descriptors containing these lines and that Google indexes them, so
 ## spammers might also collect them. You may want to obscure the fact that
 ## it's an email address and/or generate a new address for this purpose.
-#ContactInfo Random Person <nobody AT example dot com>
-## You might also include your PGP or GPG fingerprint if you have one:
-#ContactInfo 0xFFFFFFFF Random Person <nobody AT example dot com>
+ContactInfo 0x43BF769C4ACA8B96 AJ Jordan <alex AT strugee dot net>
 
+# TODO
 ## Uncomment this to mirror directory information for others. Please do
 ## if you have enough bandwidth.
 #DirPort 9030 # what port to advertise for directory connections
@@ -163,6 +160,7 @@
 ## break its concealability and potentially reveal its IP/TCP address.
 #MyFamily $keyid,$keyid,...
 
+## TODO maybe at some point?
 ## A comma-separated list of exit policies. They're considered first
 ## to last, and the first match wins.
 ##
@@ -194,7 +192,7 @@
 #ExitPolicy accept *:119 # accept nntp ports on IPv4 and IPv6 as well as default exit policy
 #ExitPolicy accept *4:119 # accept nntp ports on IPv4 only as well as default exit policy
 #ExitPolicy accept6 *6:119 # accept nntp ports on IPv6 only as well as default exit policy
-#ExitPolicy reject *:* # no exits allowed
+ExitPolicy reject *:* # no exits allowed
 
 ## Bridge relays (or "bridges") are Tor relays that aren't listed in the
 ## main directory. Since there is no complete public list of them, even an
