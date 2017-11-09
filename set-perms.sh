@@ -8,3 +8,5 @@ chmod 644 etc/rc.conf
 chown root:wheel etc/rc.conf
 chmod 644 etc/ntp.conf
 chown root:wheel etc/ntp.conf
+chmod 644 etc/make.conf
+chown root:wheel etc/make.conf
