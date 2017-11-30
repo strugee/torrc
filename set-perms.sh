@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -
 
 chmod 755 usr/local/bin/find-interesting-logs
 chown root:wheel usr/local/bin/find-interesting-logs

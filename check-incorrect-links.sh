@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -
 
 find . -not -path './.git/*' \
        -not -path ./.git \
