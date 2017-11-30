@@ -1,0 +1,13 @@
+#!/bin/sh -
+
+cd /var/log
+
+# TODO add dmesg logs?
+# TODO sendmail.st and utx.* are apparently garbage?
+# TODO investigate setuid.today
+# TODO normalize Tor log dates
+
+# sed '' tor/notices.log
+cat auth.log cron debug.log devd.log lpd-errs maillog messages mount.today ppp.log security userlog xferlog \
+| filter-other-days \
+| grep -v 'logfile first created' \
