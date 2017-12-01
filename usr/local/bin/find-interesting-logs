@@ -7,6 +7,7 @@ cd /var/log
 # TODO investigate setuid.today
 # TODO normalize Tor log dates
 # TODO don't invoke like a thousand `grep` processes
+# TODO be stricter about dates? Maybe?
 
 filter_cron() {
 	egrep -v '/usr/sbin/cron\[[[:digit:]]{3,7}\]: \(root\) CMD \(/usr/libexec/atrun\)' \
@@ -21,14 +22,17 @@ filter_cron() {
 filter_sshd() {
 	# https://stackoverflow.com/a/5284410/1198896
 	IP_REGEX='(:?[[:digit:]]{1,3}.?){4}'
-	egrep -v 'sshd\[[[:digit:]]{3,7}\]: Invalid user  ?[[:alnum:]]* from '"$IP_REGEX"'$' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: input_userauth_request: invalid user  ?[[:alnum:]]* \[preauth\]$' \
+	egrep -v 'sshd\[[[:digit:]]{3,7}\]: Invalid user .* from '"$IP_REGEX"'$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: input_userauth_request: invalid user .* \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: maximum authentication attempts exceeded for [[:alnum:]]+ from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: maximum authentication attempts exceeded for invalid user [[:alnum:]]+ from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Postponed keyboard-interactive for invalid user [[:alnum:]]+ from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Failed keyboard-interactive/pam for invalid user [[:alnum:]]+ from '"$IP_REGEX"' port [[:digit:]]+ ssh2' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: maximum authentication attempts exceeded for invalid user .* from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Postponed keyboard-interactive for invalid user .* from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Failed keyboard-interactive/pam for invalid user .* from '"$IP_REGEX"' port [[:digit:]]+ ssh2' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: authentication error for [[:alnum:]]+ from '"$IP_REGEX"'$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: authentication error for illegal user [[:alnum:]]+ from '"$IP_REGEX"'$' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: PAM: authentication error for illegal user [[:alnum:]]+ from '"$IP_REGEX"'$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: PAM: authentication error for  ?.+ from .*$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: PAM: authentication error for illegal user  ?.+ from '"$IP_REGEX"'$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: Received disconnect from '"$IP_REGEX"' port [[:digit:]]{4,5}:[[:digit:]]+: .+$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Received disconnect from '"$IP_REGEX"' port [[:digit:]]{4,5}:[[:digit:]]+: .+$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
@@ -37,6 +41,9 @@ filter_sshd() {
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection closed by '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection reset by '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection reset by '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: fatal: Unable to negotiate with '"$IP_REGEX"' port [[:digit:]]{4,5}: no matching key exchange method found. Their offer: [[:alnum:],-]+ \[preauth\]$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: fatal: Unable to negotiate with '"$IP_REGEX"' port [[:digit:]]{4,5}: no matching host key type found. Their offer: [[:alnum:]-]+ \[preauth\]$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Bad protocol version identification '\''GET / HTTP/1.1'\'' from '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Did not receive identification string from '"$IP_REGEX"'$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: reverse mapping checking getaddrinfo for [[:alnum:].-]+ \['"$IP_REGEX"'\] failed - POSSIBLE BREAK-IN ATTEMPT!' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Address '"$IP_REGEX"' maps to [[:alnum:].-]+, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!' \
@@ -47,5 +54,10 @@ filter_sshd() {
 cat auth.log cron debug.log devd.log lpd-errs maillog messages mount.today ppp.log security userlog xferlog \
 | filter-other-days \
 | fgrep -v 'logfile first created' \
+| egrep -v 'newsyslog\[[[:digit:]]{3,7}\]: logfile turned over' \
 | filter_cron \
-| filter_sshd
+| filter_sshd \
+| egrep -v 'su: ec2-user to root on /dev/pts/[[:digit:]]{1,2}' \
+| fgrep -v '/dev/gpt/rootfs		/			ufs	rw		1 1' \
+| fgrep -v 'devfs			/dev			devfs	rw,multilabel 	0 0' \
+| egrep -v 'last message repeated [[:digit:]]+ times'
