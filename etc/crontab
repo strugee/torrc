@@ -23,3 +23,6 @@ PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
 # Adjust the time zone if the CMOS clock keeps local time, as opposed to
 # UTC time.  See adjkerntz(8) for details.
 1,31	0-5	*	*	*	root	adjkerntz -a
+#
+# Find today's interesting logs and mail them to root
+58	23	*	*	*	root	find-interesting-logs | mail -s 'daily find-interesting-logs output' root
