@@ -25,4 +25,4 @@ PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
 1,31	0-5	*	*	*	root	adjkerntz -a
 #
 # Find today's interesting logs and mail them to root
-58	23	*	*	*	root	find-interesting-logs | mail -s 'daily find-interesting-logs output' root
+58	23	*	*	*	root	/usr/local/bin/find-interesting-logs | mail -s 'daily find-interesting-logs output' root
