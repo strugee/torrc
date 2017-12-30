@@ -14,3 +14,5 @@ chmod 644 etc/ntp.conf
 chown root:wheel etc/ntp.conf
 chmod 644 etc/make.conf
 chown root:wheel etc/make.conf
+chmod 644 etc/sysctl.conf
+chown root:wheel etc/sysctl.conf
