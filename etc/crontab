@@ -26,3 +26,6 @@ PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
 #
 # Find today's interesting logs and mail them to root
 58	23	*	*	*	root	/usr/local/bin/find-interesting-logs | mail -s 'daily find-interesting-logs output' root
+
+# Autostart Nyx on reboot
+@reboot                                 freebsd	screen -dmS nyx sudo -u _tor nyx
