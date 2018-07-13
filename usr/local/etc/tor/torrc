@@ -117,7 +117,7 @@ Nickname strugees
 ## Probably I should adjust this now that I have 1000 GB/month instead of,
 ## you know, 20. But I want to get a sense of how fast bandwidth goes
 ## before tweaking this.
-RelayBandwidthRate 200 KBytes
+RelayBandwidthRate 400 KBytes
 RelayBandwidthBurst 8000 KBytes
 
 ## Use these to restrict the maximum traffic per day, week, or month.
