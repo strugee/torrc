@@ -29,3 +29,5 @@ PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
 
 # Autostart Nyx on reboot
 @reboot                                 freebsd	screen -dmS nyx sudo -u _tor nyx
+@reboot                                 freebsd	date > /usr/home/freebsd/crontab-@reboot-execution
+
