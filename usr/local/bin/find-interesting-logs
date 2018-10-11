@@ -52,7 +52,7 @@ filter_sshd() {
 
 # sed '' tor/notices.log
 cat auth.log cron debug.log devd.log lpd-errs maillog messages mount.today ppp.log security userlog xferlog \
-| filter-other-days \
+| /usr/local/bin/filter-other-days \
 | fgrep -v 'logfile first created' \
 | egrep -v 'newsyslog\[[[:digit:]]{3,7}\]: logfile turned over' \
 | filter_cron \
