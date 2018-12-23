@@ -24,6 +24,7 @@ filter_sshd() {
 	# https://stackoverflow.com/a/5284410/1198896
 	IP_REGEX='(:?[[:digit:]]{1,3}.?){4}'
 	egrep -v 'sshd\[[[:digit:]]{3,7}\]: Invalid user .* from '"$IP_REGEX"'$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Invalid user .* from '"$IP_REGEX"' port [[:digit:]]+$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: input_userauth_request: invalid user .* \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: maximum authentication attempts exceeded for [[:alnum:]]+ from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: error: maximum authentication attempts exceeded for invalid user .* from '"$IP_REGEX"' port [[:digit:]]+ ssh2 \[preauth\]' \
@@ -37,6 +38,7 @@ filter_sshd() {
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Received disconnect from '"$IP_REGEX"' port [[:digit:]]{4,5}:[[:digit:]]+: .+$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from invalid user [[:alnum:]]+ '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnecting: Too many authentication failures \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection closed by '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection closed by '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
