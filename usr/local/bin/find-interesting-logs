@@ -8,6 +8,7 @@ cd /var/log
 # TODO normalize Tor log dates
 # TODO don't invoke like a thousand `grep` processes
 # TODO be stricter about dates? Maybe?
+# TODO just use grep -e...?
 
 filter_cron() {
 	egrep -v '/usr/sbin/cron\[[[:digit:]]{3,7}\]: \(root\) CMD \(/usr/libexec/atrun\)' \
