@@ -40,6 +40,7 @@ filter_sshd() {
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnected from invalid user [[:alnum:]]+ '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Disconnecting: Too many authentication failures \[preauth\]$' \
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: user [[:alnum:]]+ login class  \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection closed by '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection closed by '"$IP_REGEX"' port [[:digit:]]{4,5}$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Connection reset by '"$IP_REGEX"' port [[:digit:]]{4,5} \[preauth\]$' \
@@ -50,7 +51,7 @@ filter_sshd() {
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Did not receive identification string from '"$IP_REGEX"'$' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: reverse mapping checking getaddrinfo for [[:alnum:].-]+ \['"$IP_REGEX"'\] failed - POSSIBLE BREAK-IN ATTEMPT!' \
 	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Address '"$IP_REGEX"' maps to [[:alnum:].-]+, but this does not map back to the address - POSSIBLE BREAK-IN ATTEMPT!' \
-	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Accepted publickey for ec2-user from '"$IP_REGEX"' port [[:digit:]]{4,5} ssh2: RSA SHA256:F0gdpVLYxUP8XO2Vq8ouk5UM72bITq9j4w7vi8jIFRw$'
+	| egrep -v 'sshd\[[[:digit:]]{3,7}\]: Accepted publickey for freebsd from '"$IP_REGEX"' port [[:digit:]]{4,5} ssh2: RSA SHA256:F0gdpVLYxUP8XO2Vq8ouk5UM72bITq9j4w7vi8jIFRw$'
 }
 
 # sed '' tor/notices.log
