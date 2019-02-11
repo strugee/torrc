@@ -125,11 +125,11 @@ RelayBandwidthBurst 80000 KBytes
 ## not to their sum: setting "40 GB" may allow up to 80 GB total before
 ## hibernating.
 ##
-## Set a maximum of 2000 gigabytes each way per period.
+## Set a maximum of 3500 gigabytes each way per period.
 ##
-## This is 20,000,000 MB/30.
+## This is 3,500,000 MB/30.
 ## See https://www.torproject.org/docs/faq.html.en#LimitTotalBandwidth
-AccountingMax 66667 MBytes
+AccountingMax 116667 MBytes
 AccountingStart day 12:00
 
 ## Administrative contact information for this relay or bridge. This line
